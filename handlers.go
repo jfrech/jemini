@@ -40,19 +40,19 @@ func FileServerHandler(root string, language string) geminiConnectionHandler {
         /* directory listing */
         if info, err := os.Stat(path); err == nil && info.Mode().IsDir() {
             gc.Header(StatusSuccess, "text/gemini; charset=utf-8; lang=" + language)
-            gc.Body("# Contents of the directory »" + GeminiEscape(strings.TrimPrefix(path, root)))
+            gc.Bodyln("# Contents of the directory »" + GeminiEscape(strings.TrimPrefix(path, root)) + "«")
             if dir, err := ioutil.ReadDir(path); err != nil {
-                gc.Body("(Directory listing failed.)\n")
+                gc.Bodyln("(Directory listing failed.)")
             } else {
                 for _, fp_ := range dir {
                     fp := fp_.Name()
 
                     if info, err := os.Stat(filepath.Join(path, fp)); err == nil && info.Mode().IsRegular() {
-                        gc.Body("=> " + gc.Url().Path + fp + " [f] " + fp + "\n")
+                        gc.Bodyln("=> " + gc.Url().Path + "/" + fp + " [f] " + fp)
                     } else if info, err := os.Stat(filepath.Join(path, fp)); err == nil && info.Mode().IsDir() {
-                        gc.Body("=> " + gc.Url().Path + fp + " [d] " + fp + "\n")
+                        gc.Bodyln("=> " + gc.Url().Path + "/" + fp + " [d] " + fp)
                     } else {
-                        gc.Body("[e]" + fp + "\n")
+                        gc.Bodyln("[e]" + fp)
                     }
                 }
             }

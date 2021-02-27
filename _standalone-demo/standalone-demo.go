@@ -11,7 +11,7 @@
    # echo "replace 'jemini-demo.jfrech.com' with this machine's domain"
    # apt install certbot
    # certbot certonly --standalone --preferred-challenges http -d "jemini-demo.jfrech.com"
-   # go install pkg.jfrech.com/jemini
+   # go get pkg.jfrech.com/jemini
    # cd ~/go/src/pkg.jfrech.com/jemini/standalone-demo/ && go run standalone-demo.go
 */
 
