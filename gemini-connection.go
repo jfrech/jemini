@@ -133,7 +133,7 @@ func (gc *GeminiConnection) Errorf(format string, a ...interface{}) error {
 }
 
 func (gc *GeminiConnection) ClientErrorf(status int, format string, a ...interface{}) error {
-    if status == StatusInternalNone {
+    if gc.status == StatusInternalNone {
         gc.Header(status, fmt.Sprintf(format, a...))
     }
 

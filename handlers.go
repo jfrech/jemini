@@ -9,7 +9,7 @@ import (
 )
 
 
-func FileServer(root string, language string) geminiConnectionHandler {
+func FileServerHandler(root string, language string) geminiConnectionHandler {
     if language == "" {
         language = DefaultMimeLanguage
     }
@@ -24,10 +24,6 @@ func FileServer(root string, language string) geminiConnectionHandler {
         if path == root {
             path = root + "/"
         }
-        if path == root + "/" {
-            return gc.Header(StatusPermanentRedirect, "start.gemini")
-        }
-
         if !filepath.IsAbs(path) || !strings.HasPrefix(path, root + "/") {
             return gc.ClientErrorf(StatusBadRequest, "not an absolute path after cleaning")
         }
@@ -35,6 +31,9 @@ func FileServer(root string, language string) geminiConnectionHandler {
             if len(component) > 0 && component[0] == '.' {
                 return gc.ClientErrorf(StatusNotFound, "syntactically hidden")
             }
+        }
+        if path == root + "/" {
+            path = filepath.Join(path, "/start.gmi")
         }
 
 
