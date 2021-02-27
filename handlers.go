@@ -39,7 +39,6 @@ func FileServer(root string, language string) geminiConnectionHandler {
 
 
         /* directory listing */
-        if !filepath.IsAbs(root) {
         if info, err := os.Stat(path); err == nil && info.Mode().IsDir() {
             gc.Header(StatusSuccess, "text/gemini; charset=utf-8; lang=" + language)
             gc.Body("# Contents of the directory »" + GeminiEscape(strings.TrimPrefix(path, root)))

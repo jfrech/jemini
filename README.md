@@ -1,2 +1,2 @@
 # Jemini
-See [the Gemini Jemini demo](gemini://jemini-demo.jfrech.com).
+Visit the [Gemini](https://gemini.circumlunar.space/) page `gemini://jemini-demo.jfrech.com` to see a Jemini demo.
