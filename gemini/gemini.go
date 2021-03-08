@@ -14,7 +14,7 @@ import (
 type Capsule struct {
     Domain string
     CertFullChain, CertPrivKey string
-    Handler geminiConnectionHandler
+    Handler handler
 }
 
 
@@ -74,7 +74,7 @@ func Run(grealms []Capsule) error {
     lowLevelHandler := func(conn net.Conn) error {
         defer conn.Close()
         conn.SetDeadline(time.Now().Add(ConnectionDeadlineSeconds * time.Second))
-        gc := GeminiConnection{conn: conn,}
+        gc := Connection{conn: conn,}
 
         if url := gc.Url(); url == nil {
             return gc.ClientErrorf(StatusPermanentFailure, "unknown host")

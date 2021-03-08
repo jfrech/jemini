@@ -9,7 +9,7 @@ import (
 )
 
 
-type GeminiConnection struct {
+type Connection struct {
     conn   net.Conn
     url    *url.URL
 
@@ -17,10 +17,10 @@ type GeminiConnection struct {
     Err    error
 }
 
-type geminiConnectionHandler func(GeminiConnection)error
+type handler func(Connection)error
 
 
-func (gc *GeminiConnection) Header(status int, meta string) error {
+func (gc *Connection) Header(status int, meta string) error {
     if gc.status == StatusInternalErroneous || gc.Err != nil {
         return gc.Err
     }
@@ -47,7 +47,7 @@ func (gc *GeminiConnection) Header(status int, meta string) error {
     return gc.Err
 }
 
-func (gc *GeminiConnection) RawBody(body []byte) error {
+func (gc *Connection) RawBody(body []byte) error {
     if gc.status == StatusInternalErroneous || gc.Err != nil {
         return gc.Err
     }
@@ -63,7 +63,7 @@ func (gc *GeminiConnection) RawBody(body []byte) error {
     return gc.Err
 }
 
-func (gc *GeminiConnection) Body(body string) error {
+func (gc *Connection) Body(body string) error {
     if !utf8.Valid([]byte(body)) {
         return gc.Errorf("invalid body encoding")
     }
@@ -76,16 +76,16 @@ func (gc *GeminiConnection) Body(body string) error {
     return gc.RawBody([]byte(body))
 }
 
-func (gc *GeminiConnection) Bodyf(format string, a ...interface{}) error {
+func (gc *Connection) Bodyf(format string, a ...interface{}) error {
     return gc.Body(fmt.Sprintf(format, a...))
 }
 
-func (gc *GeminiConnection) Bodyln(a ...interface{}) error {
+func (gc *Connection) Bodyln(a ...interface{}) error {
     return gc.Body(fmt.Sprintln(a...))
 }
 
 
-func (gc *GeminiConnection) Url() *url.URL {
+func (gc *Connection) Url() *url.URL {
     if gc.url == nil {
         buf := make([]byte, BufferSize)
         n, err := gc.conn.Read(buf)
@@ -117,12 +117,12 @@ func (gc *GeminiConnection) Url() *url.URL {
     return gc.url
 }
 
-func (gc *GeminiConnection) RemoteAddr() net.Addr {
+func (gc *Connection) RemoteAddr() net.Addr {
     return gc.conn.RemoteAddr()
 }
 
 
-func (gc *GeminiConnection) Errorf(format string, a ...interface{}) error {
+func (gc *Connection) Errorf(format string, a ...interface{}) error {
     if gc.status == StatusInternalNone {
         gc.Header(StatusTemporaryFailure, fmt.Sprintf("internal server error: " + format, a...))
     }
@@ -132,7 +132,7 @@ func (gc *GeminiConnection) Errorf(format string, a ...interface{}) error {
     return gc.Err
 }
 
-func (gc *GeminiConnection) ClientErrorf(status int, format string, a ...interface{}) error {
+func (gc *Connection) ClientErrorf(status int, format string, a ...interface{}) error {
     if gc.status == StatusInternalNone {
         gc.Header(status, fmt.Sprintf(format, a...))
     }

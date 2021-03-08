@@ -5,16 +5,17 @@ import (
     "os"
     "path"
     "path/filepath"
+    "sort"
     "strings"
 )
 
 
-func FileServerHandler(root string, language string) geminiConnectionHandler {
+func FileServerHandler(root string, language string) handler {
     if language == "" {
         language = DefaultMimeLanguage
     }
 
-    return func(gc GeminiConnection) error {
+    return func(gc Connection) error {
         if !filepath.IsAbs(root) {
             return gc.Errorf("misconfigured server-side root path")
         }
@@ -44,17 +45,32 @@ func FileServerHandler(root string, language string) geminiConnectionHandler {
             if dir, err := ioutil.ReadDir(path); err != nil {
                 gc.Bodyln("(Directory listing failed.)")
             } else {
+                var files, directories, erroneous []string
                 for _, fp_ := range dir {
                     fp := fp_.Name()
 
                     if info, err := os.Stat(filepath.Join(path, fp)); err == nil && info.Mode().IsRegular() {
-                        gc.Bodyln("=> " + gc.Url().Path + "/" + fp + " [f] " + fp)
+                        files = append(files, fp)
                     } else if info, err := os.Stat(filepath.Join(path, fp)); err == nil && info.Mode().IsDir() {
-                        gc.Bodyln("=> " + gc.Url().Path + "/" + fp + " [d] " + fp)
+                        directories = append(directories, fp)
                     } else {
-                        gc.Bodyln("[e]" + fp)
+                        erroneous = append(erroneous, fp)
                     }
                 }
+
+                total := 0
+                write := func(fps []string, name string) {
+                    sort.Strings(fps)
+                    for _, fp := range fps {
+                        gc.Bodyln("=> " + gc.Url().Path + "/" + fp + " [" + name + "] " + fp)
+                        total++
+                    }
+                }
+                write(files, "f")
+                write(directories, "d")
+                write(erroneous, "e")
+
+                gc.Bodyf("(total: %d)\n", total)
             }
 
             return gc.Err
@@ -84,8 +100,8 @@ func FileServerHandler(root string, language string) geminiConnectionHandler {
 }
 
 
-func RedirectHandler(status int, url string) geminiConnectionHandler {
-    return func(gc GeminiConnection) error {
+func RedirectHandler(status int, url string) handler {
+    return func(gc Connection) error {
         if status != StatusTemporaryRedirect && status != StatusPermanentRedirect {
             return gc.Errorf("misconfigured server-side redirection")
         }

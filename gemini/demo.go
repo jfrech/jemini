@@ -6,7 +6,7 @@ import (
 )
 
 
-func DemoHandler(gc GeminiConnection) error {
+func DemoHandler(gc Connection) error {
     t := time.Now()
 
     gc.Header(StatusSuccess, "text/gemini; charset=utf-8; lang=en")
