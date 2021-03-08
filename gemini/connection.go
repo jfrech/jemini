@@ -23,7 +23,7 @@ type handler func(Connection)error
 func (gc *Connection) Header(status int, meta string) error {
 
     /* TODO potentially write headers to the gemini connection in certain cases */
-    errrf := func(format string, a ...interface{}) error {
+    errf := func(format string, a ...interface{}) error {
         gc.status = StatusInternalErroneous
         gc.Err = fmt.Errorf(format, a...)
         return gc.Err
