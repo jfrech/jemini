@@ -1,3 +1,3 @@
-module pkg.jfrech.com/jemini
+module pkg.jfrech.com/micronet
 
 go 1.15

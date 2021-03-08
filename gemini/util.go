@@ -1,4 +1,4 @@
-package jemini
+package gemini
 
 import (
     "fmt"
@@ -6,7 +6,7 @@ import (
 )
 
 
-func GeminiEscape(raw string) string {
+func Escape(raw string) string {
     var b strings.Builder
     for _, c := range []byte(raw) {
         if ' ' <= c && c <= '~' {

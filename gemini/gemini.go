@@ -1,6 +1,6 @@
-// Jonathan Frech, 2021-02-26, 2021-02-27
+// Jonathan Frech, 2021-02-26, 2021-02-27, 2021-03-08
 
-package jemini
+package gemini
 
 import (
     "crypto/tls"
@@ -11,7 +11,7 @@ import (
 )
 
 
-type GeminiRealm struct {
+type Capsule struct {
     Domain string
     CertFullChain, CertPrivKey string
     Handler geminiConnectionHandler
@@ -36,9 +36,9 @@ func ListenAndServe(config *tls.Config, lowLevelHandler func(net.Conn)error) err
     }
 }
 
-func Run(grealms []GeminiRealm) error {
+func Run(grealms []Capsule) error {
     certificates := make(map[string]*tls.Certificate)
-    geminiRealms := make(map[string]GeminiRealm)
+    capsules := make(map[string]Capsule)
 
     for _, grealm := range grealms {
         if _, ok := certificates[grealm.Domain]; ok {
@@ -50,7 +50,7 @@ func Run(grealms []GeminiRealm) error {
         }
 
         certificates[grealm.Domain] = &cert
-        geminiRealms[grealm.Domain] = grealm
+        capsules[grealm.Domain] = grealm
     }
 
     getCertificate := func(chi *tls.ClientHelloInfo) (*tls.Certificate, error) {
@@ -78,7 +78,7 @@ func Run(grealms []GeminiRealm) error {
 
         if url := gc.Url(); url == nil {
             return gc.ClientErrorf(StatusPermanentFailure, "unknown host")
-        } else if grealm, ok := geminiRealms[url.Host]; !ok {
+        } else if grealm, ok := capsules[url.Host]; !ok {
             return gc.ClientErrorf(StatusPermanentFailure, "unknown host: %q", url.Host)
         } else {
             return grealm.Handler(gc)

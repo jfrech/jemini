@@ -1,4 +1,4 @@
-package jemini
+package gemini
 
 import (
     "io/ioutil"
@@ -40,7 +40,7 @@ func FileServerHandler(root string, language string) geminiConnectionHandler {
         /* directory listing */
         if info, err := os.Stat(path); err == nil && info.Mode().IsDir() {
             gc.Header(StatusSuccess, "text/gemini; charset=utf-8; lang=" + language)
-            gc.Bodyln("# Contents of the directory »" + GeminiEscape(strings.TrimPrefix(path, root)) + "«")
+            gc.Bodyln("# Contents of the directory »" + Escape(strings.TrimPrefix(path, root)) + "«")
             if dir, err := ioutil.ReadDir(path); err != nil {
                 gc.Bodyln("(Directory listing failed.)")
             } else {

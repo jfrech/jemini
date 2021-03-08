@@ -1,4 +1,4 @@
-package jemini
+package gemini
 
 import (
     "fmt"
