@@ -11,7 +11,7 @@
    # echo "replace 'micronet-gemini.jfrech.com' with this machine's domain"
    # apt install certbot
    # certbot certonly --standalone --preferred-challenges http -d "micronet-gemini.jfrech.com"
-   # go get pkg.jfrech.com/micronet/gemini
+   # go get pkg.jfrech.com/micronet
    # cd ~/go/src/pkg.jfrech.com/micronet/gemini/demos && go run micronet-gemini-demo.go
 */
 
