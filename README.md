@@ -1,5 +1,6 @@
-# Jemini
+# micronet
 
-**Demo:** Visit the [Gemini](https://gemini.circumlunar.space/) page `gemini://jemini-demo.jfrech.com` to see a Jemini demo.
+## micronet/gemini
+**Demo:** Visit the [Gemini](https://gemini.circumlunar.space/) page `gemini://micronet-gemini.jfrech.com` to see a micronet/gemini demo.
 
-**Installation:** `go get pkg.jfrech.com/jemini`
+**Installation:** `go get pkg.jfrech.com/micronet`

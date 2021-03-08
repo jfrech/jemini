@@ -13,7 +13,7 @@ func DemoHandler(gc GeminiConnection) error {
 
     gc.Bodyln(`# micronet/gemini: a go implementation of a Gemini server`)
     gc.Bodyln(`micronet/gemini implements the gopher-like but TSL supporting Gemini protocol's server side in go, attempting to preserve its minimalistic aspirations. It is implemented in less than 512 lines of code and can be seemlessly integrated into an existing go web server and TLS certificate environment, allowing to both serve the dazzlingly white web as well as the possibly a tad fusty micro-web.`)
-    gc.Bodyln(`=> https://github.com/jfrech/micronet/gemini micronet on GitHub`)
+    gc.Bodyln(`=> https://github.com/jfrech/micronet/tree/master/gemini micronet/gemini on GitHub`)
     gc.Bodyln(`=> gemini://gemini.circumlunar.space/ Project Gemini`)
     gc.Bodyln(`=> https://go.dev go.dev`)
     gc.Bodyln("")
