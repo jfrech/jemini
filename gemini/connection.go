@@ -21,26 +21,34 @@ type handler func(Connection)error
 
 
 func (gc *Connection) Header(status int, meta string) error {
+
+    /* TODO potentially write headers to the gemini connection in certain cases */
+    errrf := func(format string, a ...interface{}) error {
+        gc.status = StatusInternalErroneous
+        gc.Err = fmt.Errorf(format, a...)
+        return gc.Err
+    }
+
     if gc.status == StatusInternalErroneous || gc.Err != nil {
         return gc.Err
     }
 
     if gc.status != StatusInternalNone {
         gc.status = StatusInternalErroneous
-        return fmt.Errorf("status already set to: %v", gc.status)
+        return errf("status already set to: %v", gc.status)
     }
     if !ValidStatus(status) {
-        return gc.Errorf("invalid status: %v", status)
+        return errf("invalid status: %v", status)
     }
     if !utf8.Valid([]byte(meta)) {
-        return gc.Errorf("invalid meta string encoding: %v", meta)
+        return errf("invalid meta string encoding: %v", meta)
     }
     if strings.TrimSpace(meta) != meta || strings.ContainsAny(meta, "\r\n") {
-        return gc.Errorf("invalid meta string: %v", meta)
+        return errf("invalid meta string: %v", meta)
     }
 
     if _, err := fmt.Fprintf(gc.conn, "%02d %s\r\n", status, meta); err != nil {
-        return gc.Errorf("failed to write header")
+        return errf("failed to write header")
     }
 
     gc.status = status
